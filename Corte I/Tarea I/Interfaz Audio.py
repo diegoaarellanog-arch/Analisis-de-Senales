@@ -26,7 +26,7 @@ class Audio(QThread):
     def run(self):
         self.corriendo = True
         self.grabacion = [] # Limpiar grabación anterior al iniciar
-        # Volvemos a InputStream porque ya no queremos reproducir mientras grabamos
+        
         with sd.InputStream(samplerate=self.fs, channels=1, callback=self.audio_callback):
             while self.corriendo:
                 self.msleep(10)
@@ -50,8 +50,7 @@ class Audio(QThread):
 # Clase de la Ventana Principal
 # ----------------------------------------------------------------------------------------------------
 # Heredamos de QMainWindow para tener una ventana completa
-class MiVentana(QMainWindow):
-    
+class MiVentana(QMainWindow):    
 
     def __init__(self):
         super().__init__()
@@ -66,11 +65,9 @@ class MiVentana(QMainWindow):
         self.setMinimumSize(self.Ancho, self.Alto)
         # self.setMaximumSize(self.Ancho, self.Alto) # Para una ventana fija, descomentar esta línea
 
-
-        # 2. El "Central Widget" (PyQt6 necesita un widget base para el layout)
+        # 2. El "Central Widget"
         self.widget_central = QWidget()
         self.setCentralWidget(self.widget_central)
-
 
         # 3. Definir el Layout
         self.layout_central = QVBoxLayout()
@@ -83,7 +80,7 @@ class MiVentana(QMainWindow):
         self.slider_velocidad.setTickPosition(QSlider.TickPosition.TicksBelow)
         self.slider_velocidad.valueChanged.connect(lambda v: self.etiqueta_velocidad.setText(f"Velocidad: {v/10}x"))
 
-        self.etiqueta_1 = QLabel("Estado: Esperando...") # Aquí mostraremos el estado de la captura
+        self.etiqueta_1 = QLabel("Estado: Esperando...") 
         
         self.etiqueta_2 = QLabel("Pendiente Grafica")
 
@@ -116,7 +113,6 @@ class MiVentana(QMainWindow):
         self.grafica.showGrid(x = True, y = True)
         self.grafica.setYRange(-0.3, 0.3) # Rango de amplitud (ajusta según tu micro)
         self.curva = self.grafica.plot(pen = 'c') # 'c' es color cian
-    
 
         # 5. Conectar Señal con Slot (Lógica)
         self.boton.clicked.connect(self.toggle_audio)
@@ -124,8 +120,8 @@ class MiVentana(QMainWindow):
         # 6. Añadir widgets al layout
         self.layout_central.addWidget(self.marco_1, 1) # (stretch = 1)
         self.layout_1.addWidget(self.marco_1I)
-        self.layout_1I.addWidget(self.etiqueta_1, 0) # (stretch = 0)
-        self.layout_1I.addWidget(self.boton, 1) # (stretch = 0)
+        self.layout_1I.addWidget(self.etiqueta_1, 0) 
+        self.layout_1I.addWidget(self.boton, 1)
         self.layout_1I.addWidget(self.boton_reproducir)
         self.layout_1I.addWidget(self.boton_reversa)
         self.layout_1I.addWidget(self.etiqueta_velocidad)
@@ -135,7 +131,6 @@ class MiVentana(QMainWindow):
         
         #self.layout_central.addWidget(self.layout_I)        
         #self.layout.addWidget(self.boton)
-
 
         # 7. Instanciar el hilo de audio
         self.hilo_audio = Audio()
@@ -222,6 +217,6 @@ class MiVentana(QMainWindow):
 # Ejecución estándar de PyQt6
 if __name__ == "__main__":
     app = QApplication(sys.argv) # Instancia el cerebro
-    ventana = MiVentana()        # Crea tu ventana
+    ventana = MiVentana()        # Crea la ventana
     ventana.show()               # La muestra
     sys.exit(app.exec())         # Inicia el bucle de eventos
